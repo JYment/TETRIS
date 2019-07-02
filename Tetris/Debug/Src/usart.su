@@ -1,0 +1,9 @@
+core_cm3.h:1441:26:NVIC_GetPriorityGrouping	4	static
+core_cm3.h:1452:22:NVIC_EnableIRQ	16	static
+core_cm3.h:1524:22:NVIC_SetPriority	16	static
+core_cm3.h:1571:26:NVIC_EncodePriority	40	static
+stm32f1xx_ll_usart.h:429:22:LL_USART_Enable	16	static
+stm32f1xx_ll_usart.h:1544:22:LL_USART_ConfigAsyncMode	16	static
+stm32f1xx_ll_bus.h:463:22:LL_APB1_GRP1_EnableClock	24	static
+stm32f1xx_ll_bus.h:779:22:LL_APB2_GRP1_EnableClock	24	static
+usart.c:29:6:MX_USART3_UART_Init	56	static
