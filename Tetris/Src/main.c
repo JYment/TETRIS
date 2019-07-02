@@ -54,10 +54,52 @@ uint8_t Buffer[2];
 extern uint8_t rx_data;
 extern uint8_t rx_flag;
 
-// [block] [rotate] [shape]
-uint8_t BLOCK[7][4][4] = {
-		{{0x00, 0x01, 0x03, 0x02}, {0x00, 0x06, 0x03, 0x00}, {0x00, 0x01, 0x03, 0x02}, {0x00, 0x06, 0x03, 0x00}}, //
-		{{0x00, 0x03, 0x03, 0x00}, {0x00, 0x03, 0x03, 0x00}, {0x00, 0x03, 0x03, 0x00}, {0x00, 0x03, 0x03, 0x00}}, // ㅁ
+uint8_t playPlace[16][8] = {
+	{0x80, 0, 0, 0, 0, 0, 0, 0x80},		// DIGIT 1
+	{0, 0, 0, 0, 0, 0, 0, 0},
+	{0, 0, 0, 0, 0, 0, 0, 0},
+	{0, 0, 0, 0, 0, 0, 0, 0},
+	{0, 0, 0, 0, 0, 0, 0, 0},
+	{0, 0, 0, 0, 0, 0, 0, 0},
+	{0, 0, 0, 0, 0, 0, 0, 0},
+	{0x01, 0, 0, 0, 0, 0, 0, 0x01},
+	{0, 0, 0, 0, 0, 0, 0, 0},		// DIGIT 0, 1
+	{0, 0, 0, 0, 0, 0, 0, 0},
+	{0, 0, 0, 0, 0, 0, 0, 0},
+	{0, 0, 0, 0, 0, 0, 0, 0},
+	{0, 0, 0, 0, 0, 0, 0, 0},
+	{0, 0, 0, 0, 0, 0, 0, 0},
+	{0, 0, 0, 0, 0, 0, 0, 0},
+	{0x01, 0, 0, 0, 0, 0, 0, 0x01}
+};
+
+// [블럭번호] [회전번호] [shape]
+uint8_t BLOCK[7][4][8] = {
+		{
+				{
+						0b00000000,
+						0b00000000,
+						0b00000000,
+						0b00000001,
+						0b00000011,
+						0b00000010,
+						0b00000000,
+						0b00000000
+				},
+				{
+						0b00000000,
+						0b00000000,
+						0b00000000,
+						0b00000110,
+						0b00000011,
+						0b00000000,
+						0b00000000,
+						0b00000000
+				},
+				{0x00, 0x01, 0x03, 0x02},
+				{0x00, 0x06, 0x03, 0x00}
+		}, //
+		{{0x00, 0x03, 0x03, 0x00}, {0x00, 0x03, 0x03, 0x00}, {0x00, 0x03, 0x03, 0x00}, {0x00, 0x03, 0x03, 0x00}}, //
 		{{0x02, 0x03, 0x01, 0x00}, {0x00, 0x03, 0x06, 0x00}, {0x02, 0x03, 0x01, 0x00}, {0x00, 0x03, 0x06, 0x00}}, //
 		{{0x01, 0x01, 0x01, 0x01}, {0x00, 0x00, 0x0F, 0x00}, {0x01, 0x01, 0x01, 0x01}, {0x00, 0x00, 0x0F, 0x00}}, //
 		{{0x00, 0x01, 0x07, 0x00}, {0x04, 0x04, 0x06, 0x00}, {0x07, 0x04, 0x00, 0x00}, {0x03, 0x01, 0x01, 0x00}}, // ㄱ
@@ -198,60 +240,86 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-	  buf[digit] = BLOCK[6][rotate][0]<<i;	max7219SendDis(x, buf);
-	  buf[digit] = BLOCK[6][rotate][1]<<i;	max7219SendDis(x+1, buf);
-	  buf[digit] = BLOCK[6][rotate][2]<<i;	max7219SendDis(x+2, buf);
-	  buf[digit] = BLOCK[6][rotate][3]<<i;	max7219SendDis(x+3, buf);
-	  HAL_Delay(300);
-	  max7219Clear();
-	  if(i++ > 5)
-	  {
-		  i = 0;
-	  }
-	  HAL_Delay(1);
+//	  buf[0] = 0xF0;		// buf[자리수 DIGIT] = 라인
+//	  max7219SendDis(8, buf);	// SCAN
+//	  buf[0] = 0xF1;		// buf[자리수 DIGIT] = 라인
+//	  max7219SendDis(1, buf);	// SCAN
+//	  buf[0] = 0;
+//	  max7219SendDis(2, buf);	// SCAN
+//	  max7219SendDis(3, buf);	// SCAN
+//	  max7219SendDis(4, buf);	// SCAN
+//	  max7219SendDis(5, buf);	// SCAN
+//	  max7219SendDis(6, buf);	// SCAN
+//	  max7219SendDis(7, buf);	// SCAN
+//	  max7219SendDis(8, buf);	// SCAN
 
-
-	  if(rx_flag)
+	  for(int i=0; i<8; i++)
 	  {
-		  rx_flag = 0;
-		  switch(rx_data)
+		  for(int j=0; j<16; j++)
 		  {
-		  	  case 97:
-		  		  x--;
-		  		  if(x <= 1 || x >= 250)
-		  		  {
-		  			  if(BLOCK[6][rotate][0] > 0)
-					  {
-						  x = 1;
-					  }
-		  			  else
-		  			  {
-		  				  x = 0;
-		  			  }
-		  		  }
-
-		  		  break;
-		  	  case 100:
-		  		  x++;
-		  		  if(x >= 6)
-		  		  {
-		  			if(BLOCK[6][rotate][3] > 0)
-					{
-		  				x = 7;
-					}
-					else
-					{
-						x = 6;
-					}
-	  			  }
-		  		  break;
-		  	  case 119:
-		  		  rotate++;
-		  		  if(rotate == 4)	rotate = 0;
-		  		  break;
+			  buf[j/8] |= 0xFF & playPlace[j][i];
 		  }
-		  printf("x = %d\r\n", x);
+	  	  max7219SendDis(i+1, buf);
+	  	  buf[0] = 0;
+	  	  buf[1] = 0;
+	  	  buf[2] = 0;
+	  	  buf[3] = 0;
 	  }
+
+//	  buf[digit] = BLOCK[6][rotate][0]<<i;	max7219SendDis(x, buf);
+//	  buf[digit] = BLOCK[6][rotate][1]<<i;	max7219SendDis(x+1, buf);
+//	  buf[digit] = BLOCK[6][rotate][2]<<i;	max7219SendDis(x+2, buf);
+//	  buf[digit] = BLOCK[6][rotate][3]<<i;	max7219SendDis(x+3, buf);
+//	  HAL_Delay(300);
+//	  max7219Clear();
+//	  if(i++ > 5)
+//	  {
+//		  i = 0;
+//	  }
+//	  HAL_Delay(1);
+//
+//
+//	  if(rx_flag)
+//	  {
+//		  rx_flag = 0;
+//		  switch(rx_data)
+//		  {
+//		  	  case 97:
+//		  		  x--;
+//		  		  if(x <= 1 || x >= 250)
+//		  		  {
+//		  			  if(BLOCK[6][rotate][0] > 0)
+//					  {
+//						  x = 1;
+//					  }
+//		  			  else
+//		  			  {
+//		  				  x = 0;
+//		  			  }
+//		  		  }
+//
+//		  		  break;
+//		  	  case 100:
+//		  		  x++;
+//		  		  if(x >= 6)
+//		  		  {
+//		  			if(BLOCK[6][rotate][3] > 0)
+//					{
+//		  				x = 7;
+//					}
+//					else
+//					{
+//						x = 6;
+//					}
+//	  			  }
+//		  		  break;
+//		  	  case 119:
+//		  		  rotate++;
+//		  		  if(rotate == 4)	rotate = 0;
+//		  		  break;
+//		  }
+//		  printf("x = %d\r\n", x);
+//	  }
   }
   /* USER CODE END 3 */
 }
