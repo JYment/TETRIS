@@ -37,8 +37,8 @@ Tetris.list \
 all: Tetris.elf secondary-outputs
 
 # Tool invocations
-Tetris.elf: $(OBJS) $(USER_OBJS) E:\1_Development\1_PROJECT\TETRIS\Tetris\STM32F103RETX_FLASH.ld
-	arm-none-eabi-gcc -o "Tetris.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m3 -T"E:\1_Development\1_PROJECT\TETRIS\Tetris\STM32F103RETX_FLASH.ld" --specs=nosys.specs -Wl,-Map="Tetris.map" -Wl,--gc-sections -static --specs=nano.specs -mfloat-abi=soft -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+Tetris.elf: $(OBJS) $(USER_OBJS) C:\STM32\Tetris\Tetris\STM32F103RETX_FLASH.ld
+	arm-none-eabi-gcc -o "Tetris.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m3 -T"C:\STM32\Tetris\Tetris\STM32F103RETX_FLASH.ld" --specs=nosys.specs -Wl,-Map="Tetris.map" -Wl,--gc-sections -static --specs=nano.specs -mfloat-abi=soft -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
 	@echo 'Finished building target: $@'
 	@echo ' '
 
